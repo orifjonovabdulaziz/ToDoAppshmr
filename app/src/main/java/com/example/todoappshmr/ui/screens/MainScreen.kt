@@ -17,7 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.todoappshmr.ui.ToDoItemRow
-import com.example.todoappshmr.utils.TaskViewModel
+import com.example.todoappshmr.repository.TaskViewModel
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.sp
 
@@ -30,7 +30,7 @@ fun MainScreen(
 ) {
     // Подписка на состояние задач из ViewModel
     val tasks by viewModel.tasks.collectAsState()
-    val completedTasksCount = tasks.count { it.isCompleted }
+    val completedTasksCount by remember { derivedStateOf { tasks.count { it.done } } }
 
     // Создание scroll behavior для эффекта сжатия
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -100,7 +100,7 @@ fun MainScreen(
                 containerColor = MaterialTheme.colorScheme.surface
             )
         ) {
-            val filteredTasks = if (showCompleted) tasks else tasks.filter { !it.isCompleted }
+            val filteredTasks = if (showCompleted) tasks else tasks.filter { !it.done }
 
             LazyColumn(
                 modifier = Modifier
@@ -108,8 +108,7 @@ fun MainScreen(
                     .padding(16.dp)
                     .clip(RoundedCornerShape(16.dp))
             ) {
-                items(filteredTasks) { item ->
-
+                items(filteredTasks, key = { it.id }) { item ->
                     ToDoItemRow(
                         item = item,
                         onCheckedChange = { isChecked ->
