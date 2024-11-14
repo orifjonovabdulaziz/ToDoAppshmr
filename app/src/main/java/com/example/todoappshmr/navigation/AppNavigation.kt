@@ -1,19 +1,17 @@
 package com.example.todoappshmr.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.todoappshmr.repository.TodoItemsRepository
 import com.example.todoappshmr.ui.screens.MainScreen
 import com.example.todoappshmr.ui.screens.TaskEditScreen
-import com.example.todoappshmr.utils.TaskViewModel
+import com.example.todoappshmr.repository.TaskViewModel
 
 @Composable
-fun AppNavigation(repository: TodoItemsRepository) {
+fun AppNavigation(viewModel: TaskViewModel) {
     val navController = rememberNavController()
-    val viewModel: TaskViewModel = viewModel()
+//    val viewModel: TaskViewModel = viewModel()
 
 
     NavHost(navController = navController, startDestination = "taskList") {
@@ -35,7 +33,7 @@ fun AppNavigation(repository: TodoItemsRepository) {
         }
         composable("taskEdit/{taskId}") { backStackEntry ->
             val taskId = backStackEntry.arguments?.getString("taskId")?.toIntOrNull()
-            val task = taskId?.let { id -> repository.getTodoItems().find { it.id == id } }
+            val task = taskId?.let { id -> viewModel.tasks.value.find { it.id == id } }
 
 
             if (task != null) {

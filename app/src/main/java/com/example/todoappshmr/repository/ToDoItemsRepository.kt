@@ -4,24 +4,32 @@ import com.example.todoappshmr.model.Importance
 import com.example.todoappshmr.model.ToDoItem
 import java.util.Date
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 class TodoItemsRepository {
 
     private var currentId = 0
 
+    private val items: MutableList<ToDoItem> = mutableListOf()
 
-    private val items: MutableList<ToDoItem> = mutableListOf(
-        *Array(20) { i ->
-            ToDoItem(
-                id = currentId++,
-                text = "Task #$i",
-                importance = Importance.values().random(),
-                deadline = if (i % 2 == 0) Date() else null,
-                isCompleted = i % 3 == 0,
-                createdAt = Date(),
-                modifiedAt = Date()
-            )
+    suspend fun generateInitialItems() {
+        // Переключаемся на фоновый поток для выполнения генерации
+        withContext(Dispatchers.Default) {
+            val newItems = List(20) { i ->
+                ToDoItem(
+                    id = currentId++,
+                    text = "Task #$i",
+                    importance = Importance.values().random(),
+                    deadline = if (i % 2 == 0) Date() else null,
+                    isCompleted = i % 3 == 0,
+                    createdAt = Date(),
+                    modifiedAt = Date()
+                )
+            }
+            items.addAll(newItems)
         }
-    )
+    }
 
     fun getTodoItems(): List<ToDoItem> {
         return items

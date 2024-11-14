@@ -11,8 +11,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.todoappshmr.model.ToDoItem
-import com.example.todoappshmr.utils.TaskViewModel
+import com.example.todoappshmr.data.Task
+import com.example.todoappshmr.repository.TaskViewModel
 import com.example.todoappshmr.utils.getImportanceFromString
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.text.SimpleDateFormat
@@ -25,7 +25,7 @@ fun TaskEditScreen(
     initialTaskDescription: String = "",
     initialDeadline: Date? = null,
     initialPriority: String = "Нет",
-    onSave: (ToDoItem) -> Unit,
+    onSave: (Task) -> Unit,
     onDelete: (Int) -> Unit,
     onClose: () -> Unit,
     taskId: Int? = null
@@ -123,14 +123,14 @@ fun TaskEditScreen(
             Row {
                 Button(
                     onClick = {
-                        val newTask = ToDoItem(
+                        val newTask = Task(
                             id = taskId ?: 0, // Используем существующий ID или создаем новый
                             text = taskDescription.text,
                             importance = importance,
                             deadline = selectedDeadline,
-                            isCompleted = false,
-                            createdAt = Date(),
-                            modifiedAt = Date()
+                            done = false,
+                            created_at = Date(),
+                            changed_at = Date()
                         )
 
                         if (taskId == null) {
