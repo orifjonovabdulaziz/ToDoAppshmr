@@ -9,6 +9,7 @@ import com.example.todoappshmr.data.Task
 import com.example.todoappshmr.model.Importance
 import com.example.todoappshmr.model.TaskRequest
 import com.example.todoappshmr.network.ApiService
+import com.example.todoappshmr.network.WrapperTasrequest
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.lang.Exception
@@ -28,7 +29,6 @@ class TaskRepository(
     val networkStatusFlow: SharedFlow<String> = _networkStatusFlow.asSharedFlow()
 
     init {
-        // Запускаем проверку сети и синхронизацию при запуске приложения
         CoroutineScope(Dispatchers.IO).launch {
             if (isNetworkAvailable()) {
                 fetchTasksFromServer()
@@ -164,8 +164,9 @@ class TaskRepository(
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
-    private fun mapTaskToTaskRequest(task: Task): TaskRequest {
-        return TaskRequest(
+    private fun mapTaskToTaskRequest(task: Task): WrapperTasrequest {
+        return WrapperTasrequest(
+            element = TaskRequest(
             id = task.id.toString(),
             text = task.text,
             importance = task.importance.name.lowercase(),
@@ -174,12 +175,13 @@ class TaskRepository(
             changed_at = task.changed_at?.time ?: System.currentTimeMillis(),
             last_updated_by = task.last_updated_by ?: "unknown",
             deadline = task.deadline?.time
-        )
+        ))
     }
 
     private fun mapTaskRequestToTask(taskRequest: TaskRequest): Task {
         return Task(
             id = taskRequest.id.toIntOrNull() ?: 0, // Обрабатываем возможное преобразование строки в Int
+
             text = taskRequest.text,
             importance = Importance.valueOf(taskRequest.importance.uppercase()), // Преобразуем строку в enum
             done = taskRequest.done,

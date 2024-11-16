@@ -45,7 +45,7 @@ fun ToDoItemRow(
             modifier =  Modifier.size(24.dp),
             colors = CheckboxDefaults.colors(
                 checkedColor = if (item.done) MaterialTheme.colorScheme.tertiary else Color.Gray,
-                uncheckedColor = if (item.importance == Importance.HIGH && !item.done) MaterialTheme.colorScheme.error else Color.Gray,
+                uncheckedColor = if (item.importance == Importance.IMPORTANT && !item.done) MaterialTheme.colorScheme.error else Color.Gray,
 
             )
         )
@@ -57,7 +57,7 @@ fun ToDoItemRow(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = if (item.importance == Importance.HIGH && !item.done) {
+                text = if (item.importance == Importance.IMPORTANT && !item.done) {
                     "‼\uFE0F ${item.text}"
                 }   else if (item.importance == Importance.LOW && !item.done){
                     "⬇${item.text}"

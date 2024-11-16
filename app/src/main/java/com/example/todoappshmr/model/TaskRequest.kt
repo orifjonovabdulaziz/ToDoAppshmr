@@ -3,6 +3,8 @@ package com.example.todoappshmr.model
 import com.example.todoappshmr.data.Task
 import java.util.Date
 
+
+
 data class TaskRequest(
     val id: String,
     val text: String,
@@ -14,6 +16,12 @@ data class TaskRequest(
     val deadline: Long?,
 
 )
+
+data class ElementWrapper(
+    val element: TaskRequest
+)
+
+
 
 
 

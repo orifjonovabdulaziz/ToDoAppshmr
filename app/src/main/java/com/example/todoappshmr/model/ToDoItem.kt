@@ -3,9 +3,9 @@ package com.example.todoappshmr.model
 import java.util.Date
 
 enum class Importance(val value: String) {
-    NORMAL("Нет"),
+    BASIC("Нет"),
     LOW("Низкий"),
-    HIGH("Высокий")
+    IMPORTANT("Высокий")
 }
 
 data class ToDoItem(
