@@ -7,7 +7,7 @@ import java.util.Date
 
 @Entity(tableName = "tasks")
 data class Task(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = false) val id: Int,
     val text: String,
     val importance: Importance,
     val deadline: Date? = null,

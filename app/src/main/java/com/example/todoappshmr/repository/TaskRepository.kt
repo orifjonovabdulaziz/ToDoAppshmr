@@ -45,12 +45,10 @@ class TaskRepository(
                 val response = apiService.getTasks()
                 if (response.isSuccessful && response.body() != null) {
                     val tasksFromServer = response.body()!!.list.map { mapTaskRequestToTask(it) }
-                    println("tasksFromServerXatooooooooooooooooooooooooooooooooooooooooooo!!!! $tasksFromServer")
 
                     // Добавляем каждый элемент в базу данных поочередно
                     tasksFromServer.forEach { task ->
                         database.taskDao().insertTask(task)
-                        println("taskXatooooooooooooooooooooooooooooooooooooooooooo!!!! $task")
                     }
 
                     _tasks.value =

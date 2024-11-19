@@ -40,7 +40,7 @@ object RetrofitClient {
             .addInterceptor(AuthInterceptor())
             .addInterceptor(loggingInterceptor)
             .addInterceptor(ChuckerInterceptor(context))
-            .sslSocketFactory(sslContext.socketFactory, trustManager)
+//            .sslSocketFactory(sslContext.socketFactory, trustManager)
             .hostnameVerifier { _, _ -> true }
             .build()
 
