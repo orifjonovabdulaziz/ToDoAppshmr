@@ -15,6 +15,7 @@ import com.example.todoappshmr.data.Task
 import com.example.todoappshmr.repository.TaskViewModel
 import com.example.todoappshmr.utils.getImportanceFromString
 import com.google.android.material.datepicker.MaterialDatePicker
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -40,6 +41,7 @@ fun TaskEditScreen(
 
     val context = LocalContext.current
     val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -120,23 +122,26 @@ fun TaskEditScreen(
             Row {
                 Button(
                     onClick = {
-                        val id = taskId ?: viewModel.getLastTaskId() + 1
-                        val newTask = Task(
-                            id = id,
-                            text = taskDescription.text,
-                            importance = importance,
-                            deadline = selectedDeadline,
-                            done = false,
-                            created_at = Date(),
-                            changed_at = Date()
-                        )
+                        coroutineScope.launch {
+                            val id = taskId ?: (viewModel.getLastTaskId() + 1)
 
-                        if (taskId == null) {
-                            viewModel.addTask(newTask)
-                        } else {
-                            viewModel.updateTask(newTask)
+                            val newTask = Task(
+                                id = id,
+                                text = taskDescription.text,
+                                importance = importance,
+                                deadline = selectedDeadline,
+                                done = false,
+                                created_at = Date(),
+                                changed_at = Date()
+                            )
+
+                            if (taskId == null) {
+                                viewModel.addTask(newTask)
+                            } else {
+                                viewModel.updateTask(newTask)
+                            }
+                            onClose()
                         }
-                        onClose()
                     },
                     modifier = Modifier.weight(1f)
                 ) {
