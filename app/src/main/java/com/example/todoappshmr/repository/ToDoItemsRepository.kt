@@ -14,7 +14,7 @@ class TodoItemsRepository {
     private val items: MutableList<ToDoItem> = mutableListOf()
 
     suspend fun generateInitialItems() {
-        // Переключаемся на фоновый поток для выполнения генерации
+
         withContext(Dispatchers.Default) {
             val newItems = List(20) { i ->
                 ToDoItem(

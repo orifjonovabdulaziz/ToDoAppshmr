@@ -25,21 +25,21 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun MainScreen(
     onAddTaskClicked: () -> Unit,
-    onTaskClicked: (Int) -> Unit = {}, // ID задачи для редактирования
+    onTaskClicked: (Int) -> Unit = {},
     viewModel: TaskViewModel
 ) {
-    // Подписка на состояние задач из ViewModel
+
     val tasks by viewModel.tasks.collectAsState()
     val completedTasksCount by remember { derivedStateOf { tasks.count { it.done } } }
 
-    // Создание scroll behavior для эффекта сжатия
+
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     var showSecondTitle by remember { mutableStateOf(true) }
 
     var showCompleted by remember { mutableStateOf(true) }
 
-    // Изменение состояния видимости второго текста в зависимости от состояния прокрутки
+
     LaunchedEffect(scrollBehavior.state.collapsedFraction) {
         showSecondTitle = scrollBehavior.state.collapsedFraction < 0.5f
     }

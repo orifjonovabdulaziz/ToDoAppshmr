@@ -15,21 +15,35 @@ import com.example.todoappshmr.repository.TaskRepository
 import android.content.Context
 
 class MainActivity : FragmentActivity() {
+    private lateinit var repository: TaskRepository
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         val database = DatabaseProvider.getDatabase(this)
         val apiService = RetrofitClient.create(this)
-        val repository = TaskRepository(database, apiService, this)
+        repository = TaskRepository(database, apiService, this)
         val viewModel: TaskViewModel by viewModels {
             TaskViewModelFactory(repository)
         }
+
 
         setContent {
             AppTheme {
                 AppNavigation(viewModel = viewModel)
             }
         }
+
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        repository.startListening()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        repository.stopListening()
     }
 }
 

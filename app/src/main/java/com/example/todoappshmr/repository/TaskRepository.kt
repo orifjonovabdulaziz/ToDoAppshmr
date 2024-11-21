@@ -7,7 +7,7 @@ import android.net.NetworkCapabilities
 import com.example.todoappshmr.data.AppDatabase
 import com.example.todoappshmr.data.Task
 import com.example.todoappshmr.model.Importance
-import com.example.todoappshmr.model.TaskRequest
+import com.example.todoappshmr.model.NetworkTaskModel
 import com.example.todoappshmr.network.ApiService
 import com.example.todoappshmr.network.WrapperTasrequest
 import kotlinx.coroutines.*
@@ -21,22 +21,36 @@ class TaskRepository(
     private val context: Context
 ) {
 
-    // Хранилище для отслеживания списка задач
     private val _tasks = MutableStateFlow<List<Task>>(emptyList())
     val tasks: StateFlow<List<Task>> get() = _tasks
 
     private val _networkStatusFlow = MutableSharedFlow<String>()
     val networkStatusFlow: SharedFlow<String> = _networkStatusFlow.asSharedFlow()
 
-    init {
-        CoroutineScope(Dispatchers.IO).launch {
-            if (isNetworkAvailable()) {
-                fetchTasksFromServer()
-            } else {
-                _networkStatusFlow.emit("No internet connection. Working in offline mode.")
-                _tasks.value = database.taskDao().getAllTasks()
+    private var networkJob: Job? = null
+    private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
+        CoroutineScope(Dispatchers.Main).launch {
+            _networkStatusFlow.emit("Error occurred: ${exception.message}")
+        }
+        exception.printStackTrace()
+    }
+
+    fun startListening() {
+        networkJob = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
+            while (isActive) {
+                if (isNetworkAvailable()) {
+                    fetchTasksFromServer()
+                } else {
+                    _networkStatusFlow.emit("No internet connection. Working in offline mode.")
+                    _tasks.value = database.taskDao().getAllTasks()
+                }
+                delay(10_000)
             }
         }
+    }
+
+    fun stopListening() {
+        networkJob?.cancel()
     }
 
     suspend fun fetchTasksFromServer() {
@@ -46,13 +60,14 @@ class TaskRepository(
                 if (response.isSuccessful && response.body() != null) {
                     val tasksFromServer = response.body()!!.list.map { mapTaskRequestToTask(it) }
 
-                    // Добавляем каждый элемент в базу данных поочередно
                     tasksFromServer.forEach { task ->
                         database.taskDao().insertTask(task)
                     }
+                    val revision = response.body()!!.revision
+                    PreferencesManager.saveRevision(context, revision)
 
                     _tasks.value =
-                        database.taskDao().getAllTasks() // Обновляем список задач из базы данных
+                        database.taskDao().getAllTasks()
                     _networkStatusFlow.emit("Tasks updated from server.")
                 } else {
                     _networkStatusFlow.emit("Failed to fetch from server, using local data.")
@@ -74,6 +89,8 @@ class TaskRepository(
                 try {
                     val response = apiService.addTask(mapTaskToTaskRequest(task))
                     if (!response.isSuccessful) throw Exception("Error adding task to server.")
+                    val revision = response.body()!!.revision
+                    PreferencesManager.saveRevision(context, revision)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     _networkStatusFlow.emit("Task added locally. Sync will occur when network is available.")
@@ -131,10 +148,8 @@ class TaskRepository(
 
     suspend fun updateTask(task: Task) {
         withContext(Dispatchers.IO) {
-            // Обновление задачи в локальной базе данных
             database.taskDao().updateTask(task)
 
-            // Попытка отправить обновление на сервер
             if (isNetworkAvailable()) {
                 try {
                     val response = apiService.updateTask(task.id.toString(), mapTaskToTaskRequest(task))
@@ -149,9 +164,12 @@ class TaskRepository(
                 _networkStatusFlow.emit("Нет подключения к интернету. Задача обновлена локально.")
             }
 
-            // Обновляем список задач из базы данных
             _tasks.value = database.taskDao().getAllTasks()
         }
+    }
+
+    suspend fun getLastTaskId(): Int? {
+        return database.taskDao().getLastTaskId()
     }
 
 
@@ -164,7 +182,7 @@ class TaskRepository(
 
     private fun mapTaskToTaskRequest(task: Task): WrapperTasrequest {
         return WrapperTasrequest(
-            element = TaskRequest(
+            element = NetworkTaskModel(
             id = task.id.toString(),
             text = task.text,
             importance = task.importance.name.lowercase(),
@@ -176,17 +194,16 @@ class TaskRepository(
         ))
     }
 
-    private fun mapTaskRequestToTask(taskRequest: TaskRequest): Task {
+    private fun mapTaskRequestToTask(networkTaskModel: NetworkTaskModel): Task {
         return Task(
-            id = taskRequest.id.toIntOrNull() ?: 0, // Обрабатываем возможное преобразование строки в Int
-
-            text = taskRequest.text,
-            importance = Importance.valueOf(taskRequest.importance.uppercase()), // Преобразуем строку в enum
-            done = taskRequest.done,
-            created_at = Date(taskRequest.created_at),
-            changed_at = Date(taskRequest.changed_at),
-            last_updated_by = taskRequest.last_updated_by,
-            deadline = taskRequest.deadline?.let { Date(it) }
+            id = networkTaskModel.id.toIntOrNull() ?: 0,
+            text = networkTaskModel.text,
+            importance = Importance.valueOf(networkTaskModel.importance.uppercase()),
+            done = networkTaskModel.done,
+            created_at = Date(networkTaskModel.created_at),
+            changed_at = Date(networkTaskModel.changed_at),
+            last_updated_by = networkTaskModel.last_updated_by,
+            deadline = networkTaskModel.deadline?.let { Date(it) }
         )
     }
 

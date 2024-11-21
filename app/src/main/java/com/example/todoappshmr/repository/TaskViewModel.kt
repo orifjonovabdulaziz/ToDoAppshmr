@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
 
@@ -25,17 +26,23 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
         }
     }
 
+    fun getLastTaskId(): Int {
+        return runBlocking {
+            repository.getLastTaskId() ?: 0
+        }
+    }
+
     fun addTask(task: Task) {
         viewModelScope.launch {
             repository.addTask(task)
-            loadTasks() // Перезагружаем список после добавления
+            loadTasks()
         }
     }
 
     fun toggleTaskCompletion(taskId: Int) {
         viewModelScope.launch {
             repository.toggleTaskCompletion(taskId)
-            loadTasks() // Перезагружаем список после изменения
+            loadTasks()
         }
     }
 
@@ -44,7 +51,7 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
             val task = _tasks.value.find { it.id == taskId }
             if (task != null) {
                 repository.removeTask(task.id)
-                loadTasks() // Перезагружаем список после удаления
+                loadTasks()
             }
         }
     }
@@ -52,7 +59,7 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
     fun updateTask(task: Task) {
         viewModelScope.launch {
             repository.updateTask(task)
-            loadTasks() // Перезагружаем список после обновления
+            loadTasks()
         }
     }
 }

@@ -22,4 +22,7 @@ interface TaskDao {
     @Query("SELECT * FROM tasks WHERE id = :taskId LIMIT 1")
     suspend fun getTaskById(taskId: Int): Task?
 
+    @Query("SELECT MAX(id) FROM tasks")
+    suspend fun getLastTaskId(): Int?
+
 }

@@ -56,7 +56,6 @@ fun SwipeableTaskItem(
     ) {
         when {
             offsetX > 0 -> {
-                // Показываем зеленую иконку при свайпе вправо
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = "Выполнено",
@@ -65,7 +64,7 @@ fun SwipeableTaskItem(
                 )
             }
             offsetX < 0 -> {
-                // Показываем красную иконку при свайпе влево
+                
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = "Удалить",
@@ -75,13 +74,13 @@ fun SwipeableTaskItem(
             }
         }
 
-        // Основной контент задачи
+
         ToDoItemRow(
             item = item,
             onCheckedChange = { isChecked ->
                 if (isChecked) onComplete()
             },
-            onItemClick = { /* Обработка клика по элементу */ }
+            onItemClick = { }
         )
     }
 }

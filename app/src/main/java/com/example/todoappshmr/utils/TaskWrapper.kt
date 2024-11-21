@@ -1,7 +1,7 @@
 package com.example.todoappshmr.utils
 
-import com.example.todoappshmr.model.TaskRequest
+import com.example.todoappshmr.model.NetworkTaskModel
 
 data class TaskWrapper(
-    val element: TaskRequest
+    val element: NetworkTaskModel
 )

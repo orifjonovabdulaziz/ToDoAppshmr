@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("kotlin-kapt")
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 android {
@@ -83,4 +84,5 @@ dependencies {
     debugImplementation("com.github.chuckerteam.chucker:library:4.0.0")
     releaseImplementation("com.github.chuckerteam.chucker:library-no-op:3.5.2")
     implementation ("org.bouncycastle:bcprov-jdk15on:1.69")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 }

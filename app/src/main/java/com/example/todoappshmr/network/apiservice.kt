@@ -1,13 +1,13 @@
 package com.example.todoappshmr.network
 
 import com.example.todoappshmr.model.TaskListResponse
-import com.example.todoappshmr.model.TaskRequest
+import com.example.todoappshmr.model.NetworkTaskModel
 import com.example.todoappshmr.model.TaskResponse
 import retrofit2.Response
 import retrofit2.http.*
 
 data class WrapperTasrequest(
-        val element: TaskRequest
+        val element: NetworkTaskModel
         )
 interface ApiService {
     @GET("todo/list/")

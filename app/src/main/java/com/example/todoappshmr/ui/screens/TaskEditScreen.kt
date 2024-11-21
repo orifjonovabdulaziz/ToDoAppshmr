@@ -58,7 +58,6 @@ fun TaskEditScreen(
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            // Поле ввода описания
             TextField(
                 value = taskDescription,
                 onValueChange = { taskDescription = it },
@@ -67,7 +66,6 @@ fun TaskEditScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Кнопка выбора даты
             Button(
                 onClick = {
                     val datePicker = MaterialDatePicker.Builder.datePicker()
@@ -90,7 +88,7 @@ fun TaskEditScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // DropdownMenu для выбора приоритета
+
             Box {
                 Text(
                     text = "Приоритет: $selectedPriority",
@@ -119,12 +117,12 @@ fun TaskEditScreen(
             Spacer(modifier = Modifier.height(16.dp))
             val importance = getImportanceFromString(selectedPriority)
 
-            // Кнопки управления
             Row {
                 Button(
                     onClick = {
+                        val id = taskId ?: viewModel.getLastTaskId() + 1
                         val newTask = Task(
-                            id = taskId ?: 0, // Используем существующий ID или создаем новый
+                            id = id,
                             text = taskDescription.text,
                             importance = importance,
                             deadline = selectedDeadline,
@@ -134,10 +132,8 @@ fun TaskEditScreen(
                         )
 
                         if (taskId == null) {
-                            // Добавление новой задачи
                             viewModel.addTask(newTask)
                         } else {
-                            // Обновление существующей задачи
                             viewModel.updateTask(newTask)
                         }
                         onClose()
