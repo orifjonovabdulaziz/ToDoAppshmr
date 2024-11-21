@@ -1,11 +1,9 @@
 package com.example.todoappshmr.ui
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
@@ -19,14 +17,14 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.todoappshmr.data.Task
 import com.example.todoappshmr.model.Importance
-import com.example.todoappshmr.model.ToDoItem
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
 fun ToDoItemRow(
-    item: ToDoItem,
+    item: Task,
     onCheckedChange: (Boolean) -> Unit,
     onItemClick: () -> Unit = {}
 ) {
@@ -39,15 +37,15 @@ fun ToDoItemRow(
     ) {
 
         Checkbox(
-            checked = item.isCompleted,
+            checked = item.done,
             onCheckedChange = { isChecked ->
                 onCheckedChange(isChecked)
             },
 
             modifier =  Modifier.size(24.dp),
             colors = CheckboxDefaults.colors(
-                checkedColor = if (item.isCompleted) MaterialTheme.colorScheme.tertiary else Color.Gray,
-                uncheckedColor = if (item.importance == Importance.HIGH && !item.isCompleted) MaterialTheme.colorScheme.error else Color.Gray,
+                checkedColor = if (item.done) MaterialTheme.colorScheme.tertiary else Color.Gray,
+                uncheckedColor = if (item.importance == Importance.IMPORTANT && !item.done) MaterialTheme.colorScheme.error else Color.Gray,
 
             )
         )
@@ -59,9 +57,9 @@ fun ToDoItemRow(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = if (item.importance == Importance.HIGH && !item.isCompleted) {
+                text = if (item.importance == Importance.IMPORTANT && !item.done) {
                     "‼\uFE0F ${item.text}"
-                }   else if (item.importance == Importance.LOW && !item.isCompleted){
+                }   else if (item.importance == Importance.LOW && !item.done){
                     "⬇${item.text}"
                 }
                 else {
@@ -70,8 +68,8 @@ fun ToDoItemRow(
                 style = MaterialTheme.typography.bodyLarge,
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
-                textDecoration = if (item.isCompleted) TextDecoration.LineThrough else TextDecoration.None,
-                color = if (item.isCompleted) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
+                textDecoration = if (item.done) TextDecoration.LineThrough else TextDecoration.None,
+                color = if (item.done) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
                 fontSize = 16.sp,
             )
 

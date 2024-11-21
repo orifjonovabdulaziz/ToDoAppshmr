@@ -17,7 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.todoappshmr.ui.ToDoItemRow
-import com.example.todoappshmr.utils.TaskViewModel
+import com.example.todoappshmr.repository.TaskViewModel
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.sp
 
@@ -25,21 +25,21 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun MainScreen(
     onAddTaskClicked: () -> Unit,
-    onTaskClicked: (Int) -> Unit = {}, // ID задачи для редактирования
+    onTaskClicked: (Int) -> Unit = {},
     viewModel: TaskViewModel
 ) {
-    // Подписка на состояние задач из ViewModel
-    val tasks by viewModel.tasks.collectAsState()
-    val completedTasksCount = tasks.count { it.isCompleted }
 
-    // Создание scroll behavior для эффекта сжатия
+    val tasks by viewModel.tasks.collectAsState()
+    val completedTasksCount by remember { derivedStateOf { tasks.count { it.done } } }
+
+
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
     var showSecondTitle by remember { mutableStateOf(true) }
 
     var showCompleted by remember { mutableStateOf(true) }
 
-    // Изменение состояния видимости второго текста в зависимости от состояния прокрутки
+
     LaunchedEffect(scrollBehavior.state.collapsedFraction) {
         showSecondTitle = scrollBehavior.state.collapsedFraction < 0.5f
     }
@@ -100,7 +100,7 @@ fun MainScreen(
                 containerColor = MaterialTheme.colorScheme.surface
             )
         ) {
-            val filteredTasks = if (showCompleted) tasks else tasks.filter { !it.isCompleted }
+            val filteredTasks = if (showCompleted) tasks else tasks.filter { !it.done }
 
             LazyColumn(
                 modifier = Modifier
@@ -108,8 +108,7 @@ fun MainScreen(
                     .padding(16.dp)
                     .clip(RoundedCornerShape(16.dp))
             ) {
-                items(filteredTasks) { item ->
-
+                items(filteredTasks, key = { it.id }) { item ->
                     ToDoItemRow(
                         item = item,
                         onCheckedChange = { isChecked ->

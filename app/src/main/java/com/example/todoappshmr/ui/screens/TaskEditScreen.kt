@@ -11,8 +11,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.todoappshmr.model.ToDoItem
-import com.example.todoappshmr.utils.TaskViewModel
+import com.example.todoappshmr.data.Task
+import com.example.todoappshmr.repository.TaskViewModel
 import com.example.todoappshmr.utils.getImportanceFromString
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.text.SimpleDateFormat
@@ -25,7 +25,7 @@ fun TaskEditScreen(
     initialTaskDescription: String = "",
     initialDeadline: Date? = null,
     initialPriority: String = "Нет",
-    onSave: (ToDoItem) -> Unit,
+    onSave: (Task) -> Unit,
     onDelete: (Int) -> Unit,
     onClose: () -> Unit,
     taskId: Int? = null
@@ -58,7 +58,6 @@ fun TaskEditScreen(
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            // Поле ввода описания
             TextField(
                 value = taskDescription,
                 onValueChange = { taskDescription = it },
@@ -67,7 +66,6 @@ fun TaskEditScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Кнопка выбора даты
             Button(
                 onClick = {
                     val datePicker = MaterialDatePicker.Builder.datePicker()
@@ -90,7 +88,7 @@ fun TaskEditScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // DropdownMenu для выбора приоритета
+
             Box {
                 Text(
                     text = "Приоритет: $selectedPriority",
@@ -119,25 +117,23 @@ fun TaskEditScreen(
             Spacer(modifier = Modifier.height(16.dp))
             val importance = getImportanceFromString(selectedPriority)
 
-            // Кнопки управления
             Row {
                 Button(
                     onClick = {
-                        val newTask = ToDoItem(
-                            id = taskId ?: 0, // Используем существующий ID или создаем новый
+                        val id = taskId ?: viewModel.getLastTaskId() + 1
+                        val newTask = Task(
+                            id = id,
                             text = taskDescription.text,
                             importance = importance,
                             deadline = selectedDeadline,
-                            isCompleted = false,
-                            createdAt = Date(),
-                            modifiedAt = Date()
+                            done = false,
+                            created_at = Date(),
+                            changed_at = Date()
                         )
 
                         if (taskId == null) {
-                            // Добавление новой задачи
                             viewModel.addTask(newTask)
                         } else {
-                            // Обновление существующей задачи
                             viewModel.updateTask(newTask)
                         }
                         onClose()

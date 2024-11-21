@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-kapt")
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 android {
@@ -71,4 +73,16 @@ dependencies {
     debugImplementation ("androidx.compose.material3:material3:1.1.0")
     debugImplementation ("androidx.compose.material:material-icons-extended:1.7.5")
     debugImplementation("com.google.android.material:material:1.9.0")
+    debugImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+    debugImplementation ("androidx.room:room-runtime:2.6.1")
+    kapt ("androidx.room:room-compiler:2.6.1")
+    debugImplementation ("androidx.room:room-ktx:2.6.1")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.3")
+    debugImplementation("com.github.chuckerteam.chucker:library:4.0.0")
+    releaseImplementation("com.github.chuckerteam.chucker:library-no-op:3.5.2")
+    implementation ("org.bouncycastle:bcprov-jdk15on:1.69")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
 }

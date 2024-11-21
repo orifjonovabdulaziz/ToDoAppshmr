@@ -22,8 +22,8 @@ fun PrioritySelector(
 ) {
     val priorities = listOf(
         Importance.LOW to "⬇",
-        Importance.NORMAL to "нет",
-        Importance.HIGH to "‼"
+        Importance.BASIC to "нет",
+        Importance.IMPORTANT to "‼"
     )
 
     Row(
