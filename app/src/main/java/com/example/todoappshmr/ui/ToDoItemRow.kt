@@ -17,8 +17,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.todoappshmr.data.Task
-import com.example.todoappshmr.model.Importance
+import com.example.todoappshmr.data.model.Task
+import com.example.todoappshmr.ui.model.Importance
 import java.text.SimpleDateFormat
 import java.util.*
 

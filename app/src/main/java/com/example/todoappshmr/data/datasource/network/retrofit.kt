@@ -1,18 +1,12 @@
-package com.example.todoappshmr.network
+package com.example.todoappshmr.data.datasource.network
 
 import android.content.Context
 import com.chuckerteam.chucker.api.ChuckerInterceptor
+import com.example.todoappshmr.data.repository.network.ApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.security.cert.X509Certificate
-import javax.net.ssl.SSLContext
-import javax.net.ssl.X509TrustManager
-
-import java.security.SecureRandom
-
-
 
 
 object RetrofitClient {

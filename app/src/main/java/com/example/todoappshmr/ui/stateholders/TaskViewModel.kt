@@ -1,9 +1,9 @@
-package com.example.todoappshmr.repository
+package com.example.todoappshmr.ui.stateholders
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todoappshmr.data.Task
-import com.example.todoappshmr.repository.TaskRepository
+import com.example.todoappshmr.data.model.Task
+import com.example.todoappshmr.domain.usecases.TaskRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

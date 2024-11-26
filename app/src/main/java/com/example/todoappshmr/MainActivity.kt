@@ -6,13 +6,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
-import com.example.todoappshmr.data.DatabaseProvider
-import com.example.todoappshmr.navigation.AppNavigation
-import com.example.todoappshmr.repository.TaskViewModel
+import com.example.todoappshmr.data.datasource.Room.DatabaseProvider
+import com.example.todoappshmr.ui.navigation.AppNavigation
+import com.example.todoappshmr.ui.stateholders.TaskViewModel
 import com.example.todoappshmr.data.TaskViewModelFactory
-import com.example.todoappshmr.network.RetrofitClient
-import com.example.todoappshmr.repository.TaskRepository
-import android.content.Context
+import com.example.todoappshmr.data.datasource.Room.TaskLocalDataSource
+import com.example.todoappshmr.data.datasource.network.RetrofitClient
+import com.example.todoappshmr.data.datasource.network.TaskRemoteDataSource
+import com.example.todoappshmr.domain.usecases.TaskRepository
 
 class MainActivity : FragmentActivity() {
     private lateinit var repository: TaskRepository
@@ -21,7 +22,10 @@ class MainActivity : FragmentActivity() {
         enableEdgeToEdge()
         val database = DatabaseProvider.getDatabase(this)
         val apiService = RetrofitClient.create(this)
-        repository = TaskRepository(database, apiService, this)
+
+        val localDataSource = TaskLocalDataSource(database)
+        val remoteDataSource = TaskRemoteDataSource(apiService)
+        repository = TaskRepository(localDataSource, remoteDataSource, this)
         val viewModel: TaskViewModel by viewModels {
             TaskViewModelFactory(repository)
         }

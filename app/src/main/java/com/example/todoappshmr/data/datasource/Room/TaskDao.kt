@@ -1,6 +1,7 @@
-package com.example.todoappshmr.data
+package com.example.todoappshmr.data.datasource.Room
 
 import androidx.room.*
+import com.example.todoappshmr.data.model.Task
 
 @Dao
 interface TaskDao {

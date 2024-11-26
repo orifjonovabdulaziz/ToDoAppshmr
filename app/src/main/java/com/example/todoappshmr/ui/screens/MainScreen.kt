@@ -17,7 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.todoappshmr.ui.ToDoItemRow
-import com.example.todoappshmr.repository.TaskViewModel
+import com.example.todoappshmr.ui.stateholders.TaskViewModel
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.sp
 

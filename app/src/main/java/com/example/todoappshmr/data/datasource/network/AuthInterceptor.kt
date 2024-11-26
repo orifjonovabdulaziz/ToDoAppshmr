@@ -1,7 +1,7 @@
-package com.example.todoappshmr.network
+package com.example.todoappshmr.data.datasource.network
 
 import android.content.Context
-import com.example.todoappshmr.repository.PreferencesManager
+import com.example.todoappshmr.data.datasource.sharedPreferences.PreferencesManager
 import okhttp3.Interceptor
 import okhttp3.Response
 

@@ -11,8 +11,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.todoappshmr.data.Task
-import com.example.todoappshmr.repository.TaskViewModel
+import com.example.todoappshmr.data.model.Task
+import com.example.todoappshmr.ui.stateholders.TaskViewModel
 import com.example.todoappshmr.utils.getImportanceFromString
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.coroutines.launch

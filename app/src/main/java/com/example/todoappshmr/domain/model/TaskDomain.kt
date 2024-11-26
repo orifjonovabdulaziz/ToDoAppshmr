@@ -1,16 +1,14 @@
-package com.example.todoappshmr.data
+package com.example.todoappshmr.domain.model
 
-import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.todoappshmr.model.Importance
+import com.example.todoappshmr.ui.model.Importance
 import com.example.todoappshmr.utils.DateSerializer
-import java.util.Date
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.util.Date
 
-@Entity(tableName = "tasks")
 @Serializable
-data class Task(
+data class TaskDomain(
     @PrimaryKey(autoGenerate = false)
     @SerialName("id") val id: Int,
     @SerialName("text") val text: String,

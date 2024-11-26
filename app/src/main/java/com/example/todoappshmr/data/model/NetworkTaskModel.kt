@@ -1,4 +1,4 @@
-package com.example.todoappshmr.model
+package com.example.todoappshmr.data.model
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
