@@ -9,7 +9,7 @@ import androidx.fragment.app.FragmentActivity
 import com.example.todoappshmr.data.datasource.Room.DatabaseProvider
 import com.example.todoappshmr.ui.navigation.AppNavigation
 import com.example.todoappshmr.ui.stateholders.TaskViewModel
-import com.example.todoappshmr.data.TaskViewModelFactory
+import com.example.todoappshmr.ioc.TaskViewModelFactory
 import com.example.todoappshmr.data.datasource.Room.TaskLocalDataSource
 import com.example.todoappshmr.data.datasource.network.RetrofitClient
 import com.example.todoappshmr.data.datasource.network.TaskRemoteDataSource

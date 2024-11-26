@@ -1,4 +1,4 @@
-package com.example.todoappshmr.data
+package com.example.todoappshmr.ioc
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
