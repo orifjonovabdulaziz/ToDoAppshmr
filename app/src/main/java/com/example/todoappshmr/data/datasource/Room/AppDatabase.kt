@@ -1,8 +1,9 @@
-package com.example.todoappshmr.data
+package com.example.todoappshmr.data.datasource.Room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.todoappshmr.data.model.Task
 import com.example.todoappshmr.utils.Converters
 
 

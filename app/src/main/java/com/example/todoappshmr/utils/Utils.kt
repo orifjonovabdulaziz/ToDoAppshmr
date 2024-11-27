@@ -1,6 +1,6 @@
 package com.example.todoappshmr.utils
 
-import com.example.todoappshmr.model.Importance
+import com.example.todoappshmr.ui.model.Importance
 
 fun getImportanceFromString(priority: String): Importance {
     return when (priority) {

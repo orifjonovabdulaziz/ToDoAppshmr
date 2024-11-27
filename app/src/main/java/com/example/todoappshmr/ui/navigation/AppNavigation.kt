@@ -1,4 +1,4 @@
-package com.example.todoappshmr.navigation
+package com.example.todoappshmr.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.todoappshmr.ui.screens.MainScreen
 import com.example.todoappshmr.ui.screens.TaskEditScreen
-import com.example.todoappshmr.repository.TaskViewModel
+import com.example.todoappshmr.ui.stateholders.TaskViewModel
 
 @Composable
 fun AppNavigation(viewModel: TaskViewModel) {
@@ -33,27 +33,7 @@ fun AppNavigation(viewModel: TaskViewModel) {
         }
         composable("taskEdit/{taskId}") { backStackEntry ->
             val taskId = backStackEntry.arguments?.getString("taskId")?.toIntOrNull()
-            val task = taskId?.let { id -> viewModel.tasks.value.find { it.id == id } }
-
-
-            if (task != null) {
-                TaskEditScreen(
-                    viewModel = viewModel,
-                    onSave = { task -> viewModel.addTask(task) },
-                    onDelete = { id -> viewModel.removeTask(id) },
-                    onClose = { navController.popBackStack() },
-                    taskId = taskId,
-                    initialTaskDescription = task.text,
-                    initialDeadline = task.deadline,
-                    initialPriority = task.importance.value,
-
-                )
-            }
-        }
-
-        composable("taskEdit/{taskId}") { backStackEntry ->
-            val taskId = backStackEntry.arguments?.getString("taskId")?.toIntOrNull()
-            val task = taskId?.let { viewModel.tasks.value.find { it.id == taskId } }
+            val task = taskId?.let { viewModel.getTaskById(it) } // Используем метод из ViewModel
 
             task?.let {
                 TaskEditScreen(
@@ -65,7 +45,6 @@ fun AppNavigation(viewModel: TaskViewModel) {
                     onDelete = { id -> viewModel.removeTask(id) },
                     onClose = { navController.popBackStack() },
                     taskId = taskId,
-
                 )
             }
         }

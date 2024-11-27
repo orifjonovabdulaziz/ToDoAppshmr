@@ -18,8 +18,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.input.pointer.pointerInput
-import com.example.todoappshmr.data.Task
-import com.example.todoappshmr.model.ToDoItem
+import com.example.todoappshmr.data.model.Task
 import com.example.todoappshmr.ui.ToDoItemRow
 import kotlin.math.roundToInt
 

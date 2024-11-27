@@ -1,8 +1,8 @@
-package com.example.todoappshmr.data
+package com.example.todoappshmr.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.todoappshmr.model.Importance
+import com.example.todoappshmr.ui.model.Importance
 import com.example.todoappshmr.utils.DateSerializer
 import java.util.Date
 import kotlinx.serialization.SerialName
