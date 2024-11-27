@@ -3,20 +3,26 @@ package com.example.todoappshmr.ui.stateholders
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoappshmr.data.model.Task
-import com.example.todoappshmr.domain.usecases.TaskRepository
+import com.example.todoappshmr.domain.usecases.NetworkUseCase
+import com.example.todoappshmr.domain.usecases.TaskUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
+class TaskViewModel(
+    private val repository: TaskUseCase,
+    private val networkRepository: NetworkUseCase
+) : ViewModel() {
 
     private val _tasks = MutableStateFlow<List<Task>>(emptyList())
     val tasks: StateFlow<List<Task>> = _tasks.asStateFlow()
 
     private val _errorState = MutableStateFlow<String?>(null)
     val errorState: StateFlow<String?> = _errorState
+    val networkStatus: StateFlow<Boolean> = networkRepository.networkStatus
+
 
     init {
         viewModelScope.launch {
@@ -26,7 +32,13 @@ class TaskViewModel(private val repository: TaskRepository) : ViewModel() {
         }
     }
 
+    fun startListening() {
+        networkRepository.startMonitoring()
+    }
 
+    fun stopListening() {
+        networkRepository.stopMonitoring()
+    }
 
     suspend fun getLastTaskId(): Int {
         return runBlocking {

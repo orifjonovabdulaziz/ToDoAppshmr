@@ -13,9 +13,10 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import java.lang.Exception
 
-class TaskRepository(
+class TaskUseCase(
     private val localDataSource: TaskLocalDataSource,
     private val remoteDataSource: TaskRemoteDataSource,
+    private val networkRepository: NetworkUseCase,
     private val context: Context
 ) {
 
@@ -24,30 +25,23 @@ class TaskRepository(
 
     private val _networkStatusFlow = MutableSharedFlow<String>()
 
-    private var networkJob: Job? = null
-    private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
-        CoroutineScope(Dispatchers.Main).launch {
-            _networkStatusFlow.emit("Error occurred: ${exception.message}")
-        }
-        exception.printStackTrace()
+
+
+    init {
+        observeNetworkChanges()
     }
 
-    fun startListening() {
-        networkJob = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
-            while (isActive) {
-                if (NetworkUtils.isNetworkAvailable(context)) {
+    private fun observeNetworkChanges() {
+        CoroutineScope(Dispatchers.IO).launch {
+            networkRepository.networkStatus.collect { isConnected ->
+//                Log.d("isConnected status", "$isConnected")
+//                if (isConnected) {
                     fetchTasksFromServer()
-                } else {
-                    _networkStatusFlow.emit("No internet connection. Working in offline mode.")
-                    _tasks.value = localDataSource.getAllTasks()
-                }
-                delay(10_000)
+//                } else {
+//                    _tasks.value = localDataSource.getAllTasks()
+//                }
             }
         }
-    }
-
-    fun stopListening() {
-        networkJob?.cancel()
     }
 
     suspend fun fetchTasksFromServer() {
