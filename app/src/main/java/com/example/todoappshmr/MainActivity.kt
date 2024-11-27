@@ -34,6 +34,7 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+
         setContent {
             AppTheme {
                 AppNavigation(viewModel = viewModel)

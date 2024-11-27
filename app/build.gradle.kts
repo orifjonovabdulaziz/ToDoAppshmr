@@ -85,4 +85,6 @@ dependencies {
     releaseImplementation("com.github.chuckerteam.chucker:library-no-op:3.5.2")
     implementation ("org.bouncycastle:bcprov-jdk15on:1.69")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation("com.google.dagger:dagger:2.46")
+    kapt("com.google.dagger:dagger-compiler:2.46")
 }
